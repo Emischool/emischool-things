@@ -1,30 +1,65 @@
 <?php
-// Funksioni për të kthyer një shumë nga një monedhë në tjetrën
-function exchange($shuma, $nga, $ne) {
-    // Kurset e këmbimit (shembull)
-    $kurset = [
-        'EUR' => ['LEK' => 120, 'USD' => 1.1],
-        'LEK' => ['EUR' => 0.0083, 'USD' => 0.0092],
-        'USD' => ['EUR' => 0.91, 'LEK' => 109]
-    ];
+$currencies = [
+    'EUR' => 'Euro',
+    'USD' => 'Dollar Amerikan',
+    'CAD' => 'Dollar Kanadez',
+    'AUD' => 'Dollar Australian',
+    'NZD' => 'Dollar Zelanda e Re',
+    'GBP' => 'Pound Britanik',
+    'CHF' => 'Franga Zviceriane',
+    'SEK' => 'Korona Suedeze',
+    'DKK' => 'Korona Daneze',
+    'NOK' => 'Korona Norvegjeze',
+    'JPY' => 'Jen Japonez',
+    'CNY' => 'Yan Kinez',
+    'TRY' => 'Lira Turke',
+    'HUF' => 'Forint Hungarez'
+];
 
-    if (isset($kurset[$nga][$ne])) {
-        return $shuma * $kurset[$nga][$ne];
+$result = "";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $amount = floatval($_POST['amount']);
+    $from = $_POST['from'];
+    $to = $_POST['to'];
+
+    $url = "https://api.exchangerate.host/convert?from=$from&to=$to&amount=$amount";
+    $response = file_get_contents($url);
+    $data = json_decode($response, true);
+
+    if ($data && isset($data['result'])) {
+        $converted = number_format($data['result'], 2);
+        $result = "$amount $from = $converted $to";
     } else {
-        return "Kurs këmbimi i panjohur!";
+        $result = "Gabim gjatë konvertimit.";
     }
 }
-
-// Shembull përdorimi
-$shuma = 100; // Shuma për të kthyer
-$nga = 'EUR'; // Monedha fillestare
-$ne = 'LEK'; // Monedha e synuar
-
-$rezultati = exchange($shuma, $nga, $ne);
-
-if (is_numeric($rezultati)) {
-    echo "$shuma $nga është e barabartë me $rezultati $ne";
-} else {
-    echo $rezultati;
-}
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Këmbimi Valutor</title>
+</head>
+<body>
+    <h2>Këmbimi Valutor</h2>
+    <form method="POST">
+        Shuma: <input type="number" step="0.01" name="amount" required><br><br>
+        Nga:
+        <select name="from">
+            <?php foreach ($currencies as $code => $name): ?>
+                <option value="<?= $code ?>"><?= "$code - $name" ?></option>
+            <?php endforeach; ?>
+        </select><br><br>
+        Në:
+        <select name="to">
+            <?php foreach ($currencies as $code => $name): ?>
+                <option value="<?= $code ?>"><?= "$code - $name" ?></option>
+            <?php endforeach; ?>
+        </select><br><br>
+        <input type="submit" value="Konverto">
+    </form>
+
+    <h3>Rezultati:</h3>
+    <p><?= $result ?></p>
+</body>
+</html>
