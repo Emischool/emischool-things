@@ -1,0 +1,10 @@
+<?php
+$numri = 5;
+$faktorieli = 1;
+
+for ($i = 1; $i <= $numri; $i++) {
+    $faktorieli *= $i;
+}
+
+echo "Faktorieli i $numri është: $faktorieli"; // Dalja: 120
+?>
