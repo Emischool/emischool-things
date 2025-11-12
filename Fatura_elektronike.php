@@ -1,12 +1,13 @@
 <?php
-echo "Voltazhi: ";
-$voltazhi = floatval(trim(fgets(STDIN)));
-echo "Koeficienti: ";
-$koeficienti = floatval(trim(fgets(STDIN)));
-$rezultati = $voltazhi * $koeficienti;
+// Merr input nga tastiera (në terminal)
+$v = (float)readline("Voltazhi (V): ");
+$k = (float)readline("Koeficienti: ");
 
-echo "\n--- Fatura Elektronike ---\n";
-echo "Voltazhi: $voltazhi V\n";
-echo "Koeficienti për voltazhin: $koeficienti\n";
-echo "Rezultati: " . round($rezultati, 2) . "\n";
+// Llogarit rezultatin
+$r = round($v * $k, 2);
+
+// Shfaq rezultatin
+echo "Voltazhi: $v V\n";
+echo "Koeficienti: $k\n";
+echo "Rezultati: $r V\n";
 ?>
