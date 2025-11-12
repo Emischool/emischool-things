@@ -1,22 +1,17 @@
 <?php
-function hapat() {
-    $hapat = [
-        "Vëzhgimi",
-        "Pytja",
-        "Hipoteza",
-        "Eksperimenti",
-        "Analiza e të dhënave",
-        "Përfundimi",
-        "Riprovimi",
-        "Raportimi"
-    ];
-    
-    echo "<ol start='1'>";
-    foreach ($hapat as $i => $hap) {
-        echo "<li>$hap</li>";
-    }
+function hapat($emri) {
+    echo "<h3>$emri</h3><ol>";
+    echo "<li>Vëzhgimi</li>";
+    echo "<li>Pytja</li>";
+    echo "<li>Hipoteza</li>";
+    echo "<li>Eksperimenti</li>";
+    echo "<li>Analiza</li>";
+    echo "<li>Përfundimi</li>";
+    echo "<li>Riprovimi</li>";
+    echo "<li>Raportimi</li>";
     echo "</ol>";
 }
 
-hapat(); // Thirrje e thjeshtë
+// Thirrje
+hapat("A ulet uji kur ziejmë vezë?");
 ?>
