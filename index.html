@@ -3,144 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login & Signup</title>
+  <meta name="description" content="Login or Sign Up to access your account securely. Fast, responsive, and modern web design.">
+  <meta name="keywords" content="login, signup, user account, authentication, responsive design">
+  <meta name="author" content="Your Name">
+  <title>Secure Login & Signup</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <!-- Minified CSS for performance -->
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif}
+    body{
+      background:linear-gradient(135deg,#0a0f2c,#1a1f4b);
+      display:flex;justify-content:center;align-items:center;
+      height:100vh;color:#fff
     }
-
-    body {
-      background: linear-gradient(135deg, #0a0f2c, #1a1f4b);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      color: #fff;
+    .container{
+      width:380px;background:rgba(255,255,255,0.1);
+      padding:40px 30px;border-radius:20px;
+      box-shadow:0 8px 25px rgba(0,0,0,0.3);
+      backdrop-filter:blur(10px);transition:.5s ease
     }
-
-    .container {
-      width: 380px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 40px 30px;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      transition: 0.5s ease;
+    h2{text-align:center;margin-bottom:25px;letter-spacing:1px}
+    .input-group{position:relative;margin-bottom:20px}
+    .input-group input{
+      width:100%;padding:12px;border:none;border-radius:10px;outline:none;
+      background:rgba(255,255,255,0.15);color:#fff;font-size:15px;transition:.3s ease
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      letter-spacing: 1px;
+    .input-group input:focus{background:rgba(255,255,255,0.25)}
+    .btn{
+      width:100%;padding:12px;border:none;border-radius:10px;
+      background:#00bcd4;color:white;font-weight:600;font-size:16px;cursor:pointer;transition:.3s
     }
-
-    .input-group {
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      outline: none;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 15px;
-      transition: 0.3s ease;
-    }
-
-    .input-group input:focus {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: #00bcd4;
-      color: white;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #0097a7;
-    }
-
-    .switch {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-
-    .switch a {
-      color: #00bcd4;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .switch a:hover {
-      text-decoration: underline;
-    }
-
-    /* Hidden forms */
-    #signup-form {
-      display: none;
-    }
-
-    /* Fade effect when switching */
-    .fade {
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Media Queries for Mobile */
-    @media (max-width: 480px) {
-      .container {
-        width: 100%;
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 24px;
-      }
-
-      .input-group input {
-        font-size: 14px;
-      }
-
-      .btn {
-        font-size: 14px;
-        padding: 10px;
-      }
-
-      .switch {
-        font-size: 12px;
-      }
+    .btn:hover{background:#0097a7}
+    .switch{text-align:center;margin-top:15px;font-size:14px}
+    .switch a{color:#00bcd4;text-decoration:none;font-weight:600}
+    .switch a:hover{text-decoration:underline}
+    #signup-form{display:none}
+    .fade{animation:fadeIn .4s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+    .error{color:#ff8a80;font-size:13px;text-align:center;margin-bottom:10px;display:none}
+    @media(max-width:480px){
+      .container{width:100%;padding:20px}
+      h2{font-size:24px}
+      .input-group input{font-size:14px}
+      .btn{font-size:14px;padding:10px}
+      .switch{font-size:12px}
     }
   </style>
 </head>
 <body>
   <div class="container" id="form-container">
-    <form id="login-form" class="fade">
+    <!-- LOGIN FORM -->
+    <form id="login-form" class="fade" onsubmit="return validateLogin(event)">
       <h2>Welcome Back</h2>
+      <div id="login-error" class="error">Invalid credentials, please try again.</div>
       <div class="input-group">
-        <input type="email" placeholder="Email" required>
+        <input type="email" id="login-email" placeholder="Email" required>
       </div>
       <div class="input-group">
-        <input type="password" placeholder="Password" required>
+        <input type="password" id="login-password" placeholder="Password" minlength="6" required>
       </div>
       <button type="submit" class="btn">Login</button>
       <div class="switch">
@@ -148,16 +69,21 @@
       </div>
     </form>
 
-    <form id="signup-form" class="fade">
+    <!-- SIGNUP FORM -->
+    <form id="signup-form" class="fade" onsubmit="return validateSignup(event)">
       <h2>Create Account</h2>
+      <div id="signup-error" class="error">Please fill all fields correctly.</div>
       <div class="input-group">
-        <input type="text" placeholder="Username" required>
+        <input type="text" id="username" placeholder="Username" minlength="3" required>
       </div>
       <div class="input-group">
-        <input type="email" placeholder="Email" required>
+        <input type="email" id="email" placeholder="Email" required>
       </div>
       <div class="input-group">
-        <input type="password" placeholder="Password" required>
+        <input type="password" id="password" placeholder="Password" minlength="6" required>
+      </div>
+      <div class="input-group">
+        <input type="password" id="confirm" placeholder="Confirm Password" minlength="6" required>
       </div>
       <button type="submit" class="btn">Sign Up</button>
       <div class="switch">
@@ -166,6 +92,7 @@
     </form>
   </div>
 
+  <!-- Secure and validated JS -->
   <script>
     const loginForm = document.getElementById("login-form");
     const signupForm = document.getElementById("signup-form");
@@ -173,6 +100,52 @@
     function toggleForm() {
       loginForm.style.display = loginForm.style.display === "none" ? "block" : "none";
       signupForm.style.display = signupForm.style.display === "none" ? "block" : "none";
+    }
+
+    // Simple email validation
+    function validEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // LOGIN validation
+    function validateLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value.trim();
+      const error = document.getElementById("login-error");
+
+      if (!validEmail(email) || password.length < 6) {
+        error.style.display = "block";
+        return false;
+      } else {
+        error.style.display = "none";
+        alert("Login successful (demo)");
+        return true;
+      }
+    }
+
+    // SIGNUP validation
+    function validateSignup(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirm = document.getElementById("confirm").value.trim();
+      const error = document.getElementById("signup-error");
+
+      if (username.length < 3 || !validEmail(email) || password.length < 6 || password !== confirm) {
+        error.style.display = "block";
+        return false;
+      } else {
+        error.style.display = "none";
+        alert("Signup successful (demo)");
+        return true;
+      }
+    }
+
+    // Basic caching hint (works with HTTPS server)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(err => console.warn('Service worker not registered:', err));
     }
   </script>
 </body>
