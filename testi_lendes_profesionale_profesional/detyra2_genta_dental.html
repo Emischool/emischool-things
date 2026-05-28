@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Genta Dental – Klinika Dentare</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #faf7f2;
+      --dark: #1a1a1a;
+      --gold: #c9a96e;
+      --teal: #2d7d78;
+      --light-teal: #e8f5f4;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(250,247,242,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(201,169,110,0.3);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 5%;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; color: var(--teal);
+      letter-spacing: 1px;
+    }
+    .logo span { color: var(--gold); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      text-decoration: none; color: var(--dark);
+      font-size: 0.9rem; font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav ul a:hover { color: var(--teal); }
+    .nav-btn {
+      background: var(--teal); color: white;
+      border: none; padding: 0.6rem 1.4rem;
+      border-radius: 50px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; transition: background 0.3s;
+    }
+    .nav-btn:hover { background: var(--gold); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 5% 4rem;
+      background: linear-gradient(135deg, var(--cream) 55%, var(--light-teal) 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; right: -100px; top: -100px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(45,125,120,0.12), transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-content { max-width: 600px; z-index: 1; }
+    .hero-badge {
+      display: inline-block;
+      background: var(--light-teal); color: var(--teal);
+      font-size: 0.8rem; font-weight: 500;
+      padding: 0.4rem 1rem; border-radius: 50px;
+      margin-bottom: 1.5rem; letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1.15; margin-bottom: 1.2rem;
+    }
+    .hero h1 em { color: var(--teal); font-style: normal; }
+    .hero p {
+      font-size: 1.1rem; color: #555;
+      line-height: 1.7; margin-bottom: 2rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--teal); color: white;
+      padding: 0.85rem 2rem; border-radius: 50px;
+      text-decoration: none; font-weight: 500;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,125,120,0.35); }
+    .btn-secondary {
+      border: 2px solid var(--teal); color: var(--teal);
+      padding: 0.85rem 2rem; border-radius: 50px;
+      text-decoration: none; font-weight: 500;
+      transition: all 0.2s; display: inline-block;
+    }
+    .btn-secondary:hover { background: var(--teal); color: white; }
+
+    .hero-stats {
+      margin-top: 3rem;
+      display: flex; gap: 2.5rem;
+    }
+    .stat h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; color: var(--teal);
+    }
+    .stat p { font-size: 0.85rem; color: #888; }
+
+    /* SERVICES */
+    section { padding: 5rem 5%; }
+    .section-label {
+      text-align: center;
+      font-size: 0.8rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      margin-bottom: 3rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .service-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid rgba(201,169,110,0.15);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+    .service-icon {
+      width: 56px; height: 56px;
+      background: var(--light-teal);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: 1.2rem;
+    }
+    .service-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; margin-bottom: 0.6rem;
+    }
+    .service-card p { font-size: 0.9rem; color: #666; line-height: 1.6; }
+
+    /* ABOUT */
+    #rreth-nesh { background: var(--light-teal); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    .about-img {
+      background: linear-gradient(135deg, var(--teal), #1a5550);
+      border-radius: 24px; height: 400px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6rem;
+    }
+    .about-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; margin-bottom: 1rem;
+    }
+    .about-text p { color: #555; line-height: 1.8; margin-bottom: 1rem; }
+    .about-list { list-style: none; }
+    .about-list li {
+      padding: 0.4rem 0;
+      padding-left: 1.5rem;
+      position: relative; color: #444;
+    }
+    .about-list li::before {
+      content: '✓';
+      position: absolute; left: 0; color: var(--teal); font-weight: bold;
+    }
+
+    /* CONTACT */
+    #kontakt { background: var(--dark); color: white; }
+    #kontakt .section-title { color: white; }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: start;
+    }
+    .contact-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .contact-item {
+      display: flex; gap: 1rem;
+      margin-bottom: 1.2rem; align-items: flex-start;
+    }
+    .contact-item .icon {
+      width: 40px; height: 40px;
+      background: rgba(201,169,110,0.15);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1.1rem;
+    }
+    .contact-item p { font-size: 0.9rem; color: #aaa; }
+    .contact-item strong { color: white; display: block; margin-bottom: 0.2rem; }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-form input,
+    .contact-form textarea {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px; padding: 0.85rem 1rem;
+      color: white; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; outline: none;
+      transition: border 0.2s;
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: #666; }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: var(--teal); }
+    .contact-form textarea { height: 130px; resize: none; }
+    .contact-form button {
+      background: var(--gold); color: var(--dark);
+      border: none; padding: 0.9rem;
+      border-radius: 10px; font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer; font-size: 1rem;
+      transition: opacity 0.2s;
+    }
+    .contact-form button:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 2rem;
+      background: #111; color: #555;
+      font-size: 0.85rem;
+    }
+    footer span { color: var(--gold); }
+
+    @media (max-width: 768px) {
+      .about-grid, .contact-grid { grid-template-columns: 1fr; }
+      nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Genta<span>Dental</span></div>
+  <ul>
+    <li><a href="#sherbimet">Shërbime</a></li>
+    <li><a href="#rreth-nesh">Rreth Nesh</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+  <button class="nav-btn" onclick="document.getElementById('kontakt').scrollIntoView({behavior:'smooth'})">
+    Rezervo Takim
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">🦷 Klinika Dentare Nr. 1</span>
+    <h1>Buzëqeshja Juaj, <em>Prioriteti Ynë</em></h1>
+    <p>Klinika "Genta Dental" ofron shërbime dentare të nivelit të lartë, me teknologji moderne dhe mjekë të specializuar. Kujdesi juaj shëndetësor është misioni ynë.</p>
+    <div class="hero-actions">
+      <a href="#sherbimet" class="btn-primary">Shiko Shërbimet</a>
+      <a href="#kontakt" class="btn-secondary">Na Kontaktoni</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><h3>12+</h3><p>Vite Eksperiencë</p></div>
+      <div class="stat"><h3>3000+</h3><p>Pacientë të Kënaqur</p></div>
+      <div class="stat"><h3>98%</h3><p>Shkallë Suksesi</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="sherbimet">
+  <p class="section-label">Çfarë Ofrojmë</p>
+  <h2 class="section-title">Shërbimet Tona</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🦷</div>
+      <h3>Ortodonci</h3>
+      <p>Trajtim i dhëmbëve me aparate dhe aliguerë modernë për buzëqeshje të përsosur.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">✨</div>
+      <h3>Zbardhim i Dhëmbëve</h3>
+      <p>Procedura profesionale të zbardhimit me rezultate të shpejta dhe afatgjata.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔬</div>
+      <h3>Implante Dentare</h3>
+      <p>Vendosje implantesh titanike me teknologji të avancuar 3D për rezultate natyrale.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛡️</div>
+      <h3>Profilaksi</h3>
+      <p>Pastrimi profesional i dhëmbëve dhe parandalimi i sëmundjeve të mishrave.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💎</div>
+      <h3>Estetikë Dentare</h3>
+      <p>Veneer porcelani dhe restaurime estetike për buzëqeshje filmike.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚑</div>
+      <h3>Urgjencë Dentare</h3>
+      <p>Shërbim 24/7 për raste urgjente dentare. Jemi gjithmonë këtu për ju.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="rreth-nesh">
+  <div class="about-grid">
+    <div class="about-img">🏥</div>
+    <div class="about-text">
+      <p class="section-label">Kush Jemi</p>
+      <h2>Klinika Dentare e Besuar në Qytet</h2>
+      <p>Klinika "Genta Dental" u themelua me misionin e ofrimit të kujdesit më të mirë oral për çdo pacient. Ekipi ynë i mjekëve të specializuar kombinon eksperiencën me teknologjinë moderne.</p>
+      <p>Ne besojmë se çdo pacient meriton trajtim të personalizuar dhe buzëqeshje të shëndetshme.</p>
+      <ul class="about-list">
+        <li>Mjekë me specializim ndërkombëtar</li>
+        <li>Pajisje teknologjike të fundit</li>
+        <li>Ambiente sterile dhe të sigurta</li>
+        <li>Çmime të favorshme dhe plane pagese</li>
+        <li>Orar fleksibël, 6 ditë në javë</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="kontakt">
+  <p class="section-label" style="color:var(--gold)">Na Gjeni</p>
+  <h2 class="section-title">Kontakti</h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>Informacioni i Klinikës</h3>
+      <div class="contact-item">
+        <div class="icon">📍</div>
+        <div>
+          <strong>Adresa</strong>
+          <p>Rruga "Dëshmorët e Kombit", Nr. 15, Tiranë</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="icon">📞</div>
+        <div>
+          <strong>Telefon</strong>
+          <p>+355 69 123 4567</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="icon">📧</div>
+        <div>
+          <strong>Email</strong>
+          <p>info@gentadental.al</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="icon">🕐</div>
+        <div>
+          <strong>Orari</strong>
+          <p>E Hënë – E Shtunë: 08:00 – 20:00</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);margin-bottom:1.5rem;">Dërgoni Mesazh</h3>
+      <div class="contact-form">
+        <input type="text" placeholder="Emri dhe Mbiemri" />
+        <input type="email" placeholder="Adresa Email" />
+        <input type="tel" placeholder="Numri i Telefonit" />
+        <textarea placeholder="Mesazhi juaj ose lloji i shërbimit të kërkuar..."></textarea>
+        <button onclick="alert('Mesazhi u dërgua! Do t\'ju kontaktojmë së shpejti.')">
+          Dërgo Mesazhin →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <span>Genta Dental</span>. Të gjitha të drejtat e rezervuara.</p>
+</footer>
+
+</body>
+</html>

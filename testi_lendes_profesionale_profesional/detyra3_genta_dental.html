@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Sistemi i Menaxhimit të Studentëve</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0f1117; --panel: #1a1d27; --border: #2a2d3a;
+      --accent: #4ade80; --accent2: #60a5fa; --warn: #f87171;
+      --text: #e2e8f0; --muted: #64748b;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; min-height:100vh; }
+
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    header h1 { font-family:'IBM Plex Mono',monospace; font-size:1.2rem; color:var(--accent); }
+    header p { font-size:0.8rem; color:var(--muted); }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+    /* FORM PANEL */
+    .form-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .form-panel h2 {
+      font-family:'IBM Plex Mono',monospace;
+      font-size:0.9rem; color:var(--accent2);
+      margin-bottom:1.2rem; letter-spacing:1px;
+    }
+    .form-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+      gap: 1rem; margin-bottom: 1rem;
+    }
+    .field { display:flex; flex-direction:column; gap:0.4rem; }
+    label { font-size:0.75rem; color:var(--muted); letter-spacing:0.5px; text-transform:uppercase; }
+    input, select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius:8px; padding:0.65rem 0.85rem;
+      color:var(--text); font-family:'IBM Plex Sans',sans-serif;
+      font-size:0.9rem; outline:none;
+      transition: border 0.2s;
+    }
+    input:focus, select:focus { border-color:var(--accent2); }
+
+    .btn-row { display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem; }
+    button {
+      padding:0.65rem 1.3rem; border-radius:8px; border:none;
+      cursor:pointer; font-family:'IBM Plex Sans',sans-serif;
+      font-size:0.9rem; font-weight:600; transition:opacity 0.2s;
+    }
+    button:hover { opacity:0.85; }
+    .btn-add { background:var(--accent); color:#0f1117; }
+    .btn-search { background:var(--accent2); color:#0f1117; }
+    .btn-clear { background:var(--border); color:var(--text); }
+    .btn-danger { background:var(--warn); color:white; }
+    .btn-export { background:#a78bfa; color:#0f1117; }
+
+    /* STATS */
+    .stats-row {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+      gap:1rem; margin-bottom:2rem;
+    }
+    .stat-card {
+      background:var(--panel); border:1px solid var(--border);
+      border-radius:10px; padding:1rem 1.2rem;
+    }
+    .stat-card .val { font-family:'IBM Plex Mono',monospace; font-size:1.8rem; font-weight:600; }
+    .stat-card .lbl { font-size:0.75rem; color:var(--muted); margin-top:0.2rem; }
+    .green { color:var(--accent); }
+    .blue { color:var(--accent2); }
+    .red { color:var(--warn); }
+    .yellow { color:#fbbf24; }
+
+    /* TABLE */
+    .table-panel {
+      background:var(--panel); border:1px solid var(--border);
+      border-radius:12px; overflow:hidden;
+    }
+    .table-header {
+      padding:1rem 1.5rem;
+      display:flex; justify-content:space-between; align-items:center;
+      border-bottom:1px solid var(--border);
+    }
+    .table-header h2 { font-family:'IBM Plex Mono',monospace; font-size:0.9rem; color:var(--accent2); }
+    #searchInput {
+      background:var(--bg); border:1px solid var(--border);
+      border-radius:8px; padding:0.5rem 0.9rem;
+      color:var(--text); font-size:0.85rem; outline:none; width:220px;
+    }
+    table { width:100%; border-collapse:collapse; }
+    th {
+      padding:0.8rem 1.2rem; text-align:left;
+      font-size:0.75rem; color:var(--muted);
+      text-transform:uppercase; letter-spacing:0.5px;
+      background:rgba(0,0,0,0.2);
+      border-bottom:1px solid var(--border);
+    }
+    td { padding:0.85rem 1.2rem; font-size:0.9rem; border-bottom:1px solid var(--border); }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:rgba(255,255,255,0.02); }
+
+    .grade-badge {
+      display:inline-block; padding:0.2rem 0.6rem;
+      border-radius:6px; font-family:'IBM Plex Mono',monospace;
+      font-size:0.8rem; font-weight:600;
+    }
+    .grade-A { background:rgba(74,222,128,0.15); color:var(--accent); }
+    .grade-B { background:rgba(96,165,250,0.15); color:var(--accent2); }
+    .grade-C { background:rgba(251,191,36,0.15); color:#fbbf24; }
+    .grade-D { background:rgba(248,113,113,0.15); color:var(--warn); }
+
+    .act-btn {
+      padding:0.3rem 0.7rem; border-radius:6px; font-size:0.8rem;
+      border:none; cursor:pointer; font-weight:600; margin-right:0.3rem;
+    }
+    .act-edit { background:rgba(96,165,250,0.15); color:var(--accent2); }
+    .act-del  { background:rgba(248,113,113,0.15); color:var(--warn); }
+
+    .empty-state { text-align:center; padding:3rem; color:var(--muted); }
+    .empty-state .icon { font-size:3rem; margin-bottom:1rem; }
+
+    #toast {
+      position:fixed; bottom:2rem; right:2rem;
+      background:var(--accent); color:#0f1117;
+      padding:0.8rem 1.4rem; border-radius:10px;
+      font-weight:600; font-size:0.9rem;
+      transform:translateY(100px); opacity:0;
+      transition:all 0.3s; pointer-events:none; z-index:999;
+    }
+    #toast.show { transform:translateY(0); opacity:1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>// STUDENT_MANAGER.js</h1>
+    <p>Sistem i menaxhimit të të dhënave të studentëve – Shkolla "Genta"</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- FORM -->
+  <div class="form-panel">
+    <h2>➕ SHTO / EDITO STUDENT</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>Emri</label>
+        <input id="fName" type="text" placeholder="p.sh. Andi"/>
+      </div>
+      <div class="field">
+        <label>Mbiemri</label>
+        <input id="fSurname" type="text" placeholder="p.sh. Berisha"/>
+      </div>
+      <div class="field">
+        <label>Klasa</label>
+        <select id="fClass">
+          <option value="">-- Zgjidh --</option>
+          <option>10-A</option><option>10-B</option>
+          <option>11-A</option><option>11-B</option>
+          <option>12-A</option><option>12-B</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Lënda</label>
+        <input id="fSubject" type="text" placeholder="p.sh. Matematikë"/>
+      </div>
+      <div class="field">
+        <label>Nota (1-10)</label>
+        <input id="fGrade" type="number" min="1" max="10" placeholder="p.sh. 9"/>
+      </div>
+      <div class="field">
+        <label>Prezenca (%)</label>
+        <input id="fAttend" type="number" min="0" max="100" placeholder="p.sh. 92"/>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-add" onclick="addOrUpdate()">💾 Ruaj Studentin</button>
+      <button class="btn-clear" onclick="clearForm()">✖ Pastro Formën</button>
+      <button class="btn-export" onclick="exportCSV()">📤 Eksporto CSV</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row" id="stats"></div>
+
+  <!-- TABLE -->
+  <div class="table-panel">
+    <div class="table-header">
+      <h2>📋 LISTA E STUDENTËVE</h2>
+      <input id="searchInput" type="text" placeholder="Kërko emrin..." oninput="renderTable()"/>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Emri</th><th>Mbiemri</th><th>Klasa</th>
+          <th>Lënda</th><th>Nota</th><th>Prezenca</th><th>Vlerësim</th><th>Veprime</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display:none">
+      <div class="icon">📂</div>
+      <p>Asnjë student nuk u gjet.</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // ── DATA ──────────────────────────────────────────────
+  let students = JSON.parse(localStorage.getItem('students') || '[]');
+  let editId = null;
+
+  // Pre-populate sample data
+  if (students.length === 0) {
+    students = [
+      { id:1, name:'Andi', surname:'Berisha', cls:'10-A', subject:'Matematikë', grade:9, attend:95 },
+      { id:2, name:'Blerina', surname:'Hoxha', cls:'11-B', subject:'Fizikë', grade:7, attend:88 },
+      { id:3, name:'Drin', surname:'Krasniqi', cls:'12-A', subject:'Informatikë', grade:10, attend:100 },
+      { id:4, name:'Era', surname:'Gjoka', cls:'10-B', subject:'Kimi', grade:6, attend:72 },
+      { id:5, name:'Faton', surname:'Osmani', cls:'11-A', subject:'Histori', grade:8, attend:91 },
+    ];
+    save();
+  }
+
+  function save() {
+    localStorage.setItem('students', JSON.stringify(students));
+    renderStats();
+    renderTable();
+  }
+
+  // ── GRADE LABEL ──────────────────────────────────────
+  function gradeLabel(g) {
+    if (g >= 9) return { lbl:'A – Shkëlqyer', cls:'grade-A' };
+    if (g >= 7) return { lbl:'B – Mirë', cls:'grade-B' };
+    if (g >= 5) return { lbl:'C – Kënaqshëm', cls:'grade-C' };
+    return { lbl:'D – Dobët', cls:'grade-D' };
+  }
+
+  // ── ADD / UPDATE ──────────────────────────────────────
+  function addOrUpdate() {
+    const name    = document.getElementById('fName').value.trim();
+    const surname = document.getElementById('fSurname').value.trim();
+    const cls     = document.getElementById('fClass').value;
+    const subject = document.getElementById('fSubject').value.trim();
+    const grade   = parseInt(document.getElementById('fGrade').value);
+    const attend  = parseInt(document.getElementById('fAttend').value);
+
+    if (!name || !surname || !cls || !subject || isNaN(grade) || isNaN(attend)) {
+      toast('⚠️ Plotësoni të gjitha fushat!', '#f87171'); return;
+    }
+    if (grade < 1 || grade > 10) { toast('Nota duhet 1-10!', '#f87171'); return; }
+    if (attend < 0 || attend > 100) { toast('Prezenca duhet 0-100!', '#f87171'); return; }
+
+    if (editId !== null) {
+      const idx = students.findIndex(s => s.id === editId);
+      if (idx > -1) students[idx] = { id: editId, name, surname, cls, subject, grade, attend };
+      editId = null;
+      toast('✅ Studenti u përditësua!');
+    } else {
+      const id = students.length ? Math.max(...students.map(s => s.id)) + 1 : 1;
+      students.push({ id, name, surname, cls, subject, grade, attend });
+      toast('✅ Studenti u shtua!');
+    }
+    clearForm(); save();
+  }
+
+  // ── DELETE ────────────────────────────────────────────
+  function deleteStudent(id) {
+    if (!confirm('Fshi këtë student?')) return;
+    students = students.filter(s => s.id !== id);
+    save(); toast('🗑️ Studenti u fshi!', '#f87171');
+  }
+
+  // ── EDIT ──────────────────────────────────────────────
+  function editStudent(id) {
+    const s = students.find(s => s.id === id);
+    if (!s) return;
+    document.getElementById('fName').value    = s.name;
+    document.getElementById('fSurname').value = s.surname;
+    document.getElementById('fClass').value   = s.cls;
+    document.getElementById('fSubject').value = s.subject;
+    document.getElementById('fGrade').value   = s.grade;
+    document.getElementById('fAttend').value  = s.attend;
+    editId = id;
+    document.querySelector('.form-panel').scrollIntoView({ behavior:'smooth' });
+    toast('✏️ Edito dhe ruaj ndryshimet', '#60a5fa');
+  }
+
+  function clearForm() {
+    ['fName','fSurname','fClass','fSubject','fGrade','fAttend'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    editId = null;
+  }
+
+  // ── RENDER TABLE ──────────────────────────────────────
+  function renderTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = students.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      s.surname.toLowerCase().includes(q) ||
+      s.cls.toLowerCase().includes(q) ||
+      s.subject.toLowerCase().includes(q)
+    );
+    const tbody = document.getElementById('tableBody');
+    const empty = document.getElementById('emptyState');
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = filtered.map((s, i) => {
+      const gl = gradeLabel(s.grade);
+      const attendColor = s.attend >= 85 ? '#4ade80' : s.attend >= 70 ? '#fbbf24' : '#f87171';
+      return `<tr>
+        <td style="color:var(--muted);font-family:'IBM Plex Mono',monospace">${i+1}</td>
+        <td><strong>${s.name}</strong></td>
+        <td>${s.surname}</td>
+        <td style="font-family:'IBM Plex Mono',monospace">${s.cls}</td>
+        <td>${s.subject}</td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-weight:600">${s.grade}</td>
+        <td style="color:${attendColor};font-weight:600">${s.attend}%</td>
+        <td><span class="grade-badge ${gl.cls}">${gl.lbl}</span></td>
+        <td>
+          <button class="act-btn act-edit" onclick="editStudent(${s.id})">✏️ Edito</button>
+          <button class="act-btn act-del" onclick="deleteStudent(${s.id})">🗑️</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── RENDER STATS ──────────────────────────────────────
+  function renderStats() {
+    const total = students.length;
+    const avg = total ? (students.reduce((a,s)=>a+s.grade,0)/total).toFixed(1) : 0;
+    const passing = students.filter(s=>s.grade>=5).length;
+    const avgAttend = total ? Math.round(students.reduce((a,s)=>a+s.attend,0)/total) : 0;
+
+    document.getElementById('stats').innerHTML = `
+      <div class="stat-card"><div class="val blue">${total}</div><div class="lbl">Studentë Gjithsej</div></div>
+      <div class="stat-card"><div class="val green">${avg}</div><div class="lbl">Mesatarja e Notave</div></div>
+      <div class="stat-card"><div class="val green">${passing}</div><div class="lbl">Kalojnë Provimin</div></div>
+      <div class="stat-card"><div class="val ${avgAttend>=85?'green':avgAttend>=70?'yellow':'red'}">${avgAttend}%</div><div class="lbl">Prezenca Mesatare</div></div>
+    `;
+  }
+
+  // ── EXPORT CSV ────────────────────────────────────────
+  function exportCSV() {
+    const header = ['ID','Emri','Mbiemri','Klasa','Lënda','Nota','Prezenca (%)'];
+    const rows = students.map(s => [s.id,s.name,s.surname,s.cls,s.subject,s.grade,s.attend]);
+    const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'studentet.csv';
+    a.click();
+    toast('📤 CSV u eksportua!', '#a78bfa');
+  }
+
+  // ── TOAST ─────────────────────────────────────────────
+  function toast(msg, color = '#4ade80') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = color;
+    t.style.color = color === '#f87171' || color === '#a78bfa' ? 'white' : '#0f1117';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ── INIT ──────────────────────────────────────────────
+  renderStats();
+  renderTable();
+</script>
+</body>
+</html>

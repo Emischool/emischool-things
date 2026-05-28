@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Siguria e Të Dhënave – Genta Dental</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#0a0e1a; --panel:#111827; --border:#1f2937;
+      --green:#22c55e; --red:#ef4444; --blue:#3b82f6;
+      --yellow:#eab308; --purple:#a855f7; --text:#f1f5f9; --muted:#6b7280;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+
+    header{
+      background:linear-gradient(135deg,#111827,#0a0e1a);
+      border-bottom:1px solid var(--border);
+      padding:1.5rem 2rem; display:flex; align-items:center; gap:1rem;
+    }
+    .shield{font-size:2rem;}
+    header h1{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;color:var(--green);}
+    header p{font-size:0.8rem;color:var(--muted);}
+
+    .container{max-width:900px;margin:0 auto;padding:2rem;}
+
+    .alert-bar{
+      background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3);
+      border-radius:10px; padding:1rem 1.2rem; margin-bottom:2rem;
+      display:flex; gap:0.8rem; align-items:flex-start;
+      font-size:0.85rem; color:#fca5a5; line-height:1.6;
+    }
+
+    .card{
+      background:var(--panel); border:1px solid var(--border);
+      border-radius:14px; margin-bottom:1.5rem; overflow:hidden;
+    }
+    .card-header{
+      padding:1rem 1.4rem; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:0.7rem;
+    }
+    .card-header h2{font-family:'IBM Plex Mono',monospace;font-size:0.85rem;color:var(--blue);}
+    .card-body{padding:1.4rem;}
+
+    /* THREATS */
+    .threat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+    .threat{
+      border:1px solid var(--border);border-radius:10px;padding:1rem;
+      background:rgba(0,0,0,0.2);
+    }
+    .threat .icon{font-size:1.5rem;margin-bottom:0.5rem;}
+    .threat h4{font-size:0.85rem;font-weight:600;margin-bottom:0.3rem;}
+    .threat p{font-size:0.75rem;color:var(--muted);line-height:1.5;}
+    .sev{display:inline-block;font-size:0.7rem;padding:0.15rem 0.5rem;border-radius:4px;margin-bottom:0.5rem;font-weight:600;}
+    .sev-high{background:rgba(239,68,68,0.2);color:var(--red);}
+    .sev-med{background:rgba(234,179,8,0.2);color:var(--yellow);}
+
+    /* FORM */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+    label{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:0.35rem;}
+    input[type=text],input[type=email],input[type=password]{
+      width:100%;background:var(--bg);border:1px solid var(--border);
+      border-radius:8px;padding:0.7rem 1rem;color:var(--text);
+      font-family:'IBM Plex Mono',monospace;font-size:0.85rem;outline:none;
+      transition:border 0.2s;
+    }
+    input:focus{border-color:var(--blue);}
+    .strength-bar{height:4px;border-radius:2px;margin-top:0.4rem;transition:all 0.3s;background:var(--border);}
+    .strength-txt{font-size:0.7rem;color:var(--muted);margin-top:0.3rem;}
+
+    button{
+      padding:0.7rem 1.4rem;border-radius:8px;border:none;cursor:pointer;
+      font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;transition:opacity 0.2s;
+    }
+    button:hover{opacity:0.85;}
+    .btn-encrypt{background:var(--green);color:#0a0e1a;}
+    .btn-decrypt{background:var(--blue);color:white;}
+    .btn-login{background:var(--purple);color:white;}
+
+    /* OUTPUT */
+    .output{
+      background:rgba(0,0,0,0.3);border:1px solid var(--border);
+      border-radius:8px;padding:1rem;margin-top:1rem;
+    }
+    .output h4{font-size:0.75rem;color:var(--muted);margin-bottom:0.6rem;text-transform:uppercase;}
+    .mono{
+      font-family:'IBM Plex Mono',monospace;font-size:0.78rem;
+      word-break:break-all;line-height:1.7;
+    }
+    .ok{color:var(--green);}
+    .bad{color:var(--red);}
+
+    /* LOG */
+    .log-entry{
+      padding:0.5rem 0;border-bottom:1px solid var(--border);
+      display:flex;gap:0.8rem;align-items:flex-start;font-size:0.8rem;
+    }
+    .log-entry:last-child{border-bottom:none;}
+    .log-time{color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
+    .log-ok{color:var(--green);}
+    .log-fail{color:var(--red);}
+    .log-info{color:var(--blue);}
+
+    /* TABS */
+    .tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;}
+    .tab{
+      padding:0.5rem 1.2rem;border-radius:8px;border:1px solid var(--border);
+      cursor:pointer;font-size:0.85rem;background:transparent;color:var(--muted);
+      transition:all 0.2s;
+    }
+    .tab.active{background:var(--blue);color:white;border-color:var(--blue);}
+
+    .section{display:none;}
+    .section.active{display:block;}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="shield">🔐</div>
+  <div>
+    <h1>SECURITY_MODULE – Genta Dental</h1>
+    <p>Detyra 6: Siguria e Programeve dhe Enkriptimi i Të Dhënave të Llogarisë Përdorues</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="alert-bar">
+    ⚠️ <div>
+      <strong style="color:white">Paralajmërim Sigurie:</strong> Klinika "Genta Dental" ruan të dhëna sensitive të pacientëve (emër, mbiemër, numër telefoni, email, histori mjekësore). Rritja e sulmeve kibernetike kërkon enkriptim të plotë të të dhënave.
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('threats')">🎯 Sulmet & Kërcënimet</button>
+    <button class="tab" onclick="showTab('encrypt')">🔒 Enkriptimi i Llogarisë</button>
+    <button class="tab" onclick="showTab('login')">🛡️ Hyrje e Sigurt</button>
+    <button class="tab" onclick="showTab('log')">📋 Regjistri i Sigurisë</button>
+  </div>
+
+  <!-- THREATS -->
+  <div id="threats" class="section active">
+    <div class="card">
+      <div class="card-header"><span>⚠️</span><h2>SULMET DHE KËRCËNIMET MBI TË DHËNAT PERSONALE</h2></div>
+      <div class="card-body">
+        <div class="threat-grid">
+          <div class="threat">
+            <div class="icon">🎣</div>
+            <span class="sev sev-high">RREZIK I LARTË</span>
+            <h4>Phishing (Mashtrim Email)</h4>
+            <p>Sulmuesit dërgojnë email të rreme që imitojnë klinikën për të vjedhur kredencialet e stafit.</p>
+          </div>
+          <div class="threat">
+            <div class="icon">💣</div>
+            <span class="sev sev-high">RREZIK I LARTË</span>
+            <h4>Ransomware</h4>
+            <p>Malware që enkripton të dhënat e klinikës dhe kërkon shpërblesë. Sulm kritik për spitale.</p>
+          </div>
+          <div class="threat">
+            <div class="icon">🔓</div>
+            <span class="sev sev-high">RREZIK I LARTË</span>
+            <h4>Brute Force</h4>
+            <p>Tentativa automatike për të gjetur fjalëkalimet e llogarive duke provuar miliona kombinime.</p>
+          </div>
+          <div class="threat">
+            <div class="icon">🕵️</div>
+            <span class="sev sev-med">RREZIK MESATAR</span>
+            <h4>SQL Injection</h4>
+            <p>Injektim i kodit keqdashës në fushat e formularëve për të aksesuar bazën e dhënave.</p>
+          </div>
+          <div class="threat">
+            <div class="icon">📡</div>
+            <span class="sev sev-med">RREZIK MESATAR</span>
+            <h4>Man-in-the-Middle</h4>
+            <p>Përgjim i komunikimit mes klientit dhe serverit në rrjete të pasigurta (Wi-Fi publik).</p>
+          </div>
+          <div class="threat">
+            <div class="icon">🦠</div>
+            <span class="sev sev-high">RREZIK I LARTË</span>
+            <h4>Spyware / Keylogger</h4>
+            <p>Softuer keqdashës që regjistron çdo tastierë të shtypur, duke kapur fjalëkalime.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENCRYPT -->
+  <div id="encrypt" class="section">
+    <div class="card">
+      <div class="card-header"><span>🔒</span><h2>ENKRIPTIMI I TË DHËNAVE TË LLOGARISË PËRDORUES</h2></div>
+      <div class="card-body">
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem;">
+          Zgjedhja e antivirusit: <strong style="color:var(--green)">AES-256-GCM</strong> (enkriptim simetrik) – Standardi i artë për mbrojtjen e të dhënave mjekësore. Konfigurimi përfshin çelës 256-bit dhe IV unik për çdo operacion.
+        </p>
+
+        <div class="form-grid">
+          <div>
+            <label>Emri i Plotë</label>
+            <input type="text" id="encName" placeholder="p.sh. Andi Berisha"/>
+          </div>
+          <div>
+            <label>Email</label>
+            <input type="email" id="encEmail" placeholder="p.sh. andi@email.com"/>
+          </div>
+          <div>
+            <label>Numri i Telefonit</label>
+            <input type="text" id="encPhone" placeholder="p.sh. +355 69 123 4567"/>
+          </div>
+          <div>
+            <label>Fjalëkalimi i llogarisë</label>
+            <input type="password" id="encPass" placeholder="Fjalëkalim i fortë..." oninput="checkStrength(this)"/>
+            <div class="strength-bar" id="strengthBar"></div>
+            <div class="strength-txt" id="strengthTxt"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:0.5rem;">
+          <button class="btn-encrypt" onclick="encryptData()">🔒 Enkriptime Të Dhënat</button>
+          <button class="btn-decrypt" onclick="decryptData()">🔓 Dekriptim</button>
+        </div>
+
+        <div class="output" id="encOutput" style="display:none">
+          <h4>📦 Rezultati i Enkriptimit (AES-256-GCM)</h4>
+          <div class="mono" id="encResult"></div>
+        </div>
+        <div class="output" id="decOutput" style="display:none">
+          <h4>✅ Të Dhënat e Dekriptuara</h4>
+          <div class="mono ok" id="decResult"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="login" class="section">
+    <div class="card">
+      <div class="card-header"><span>🛡️</span><h2>HYRJE E SIGURT – MENAXHIMI I SESIONEVE DHE FJALËKALIMEVE</h2></div>
+      <div class="card-body">
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem;">
+          Konfigurimi: Fjalëkalimet ruhen si <strong style="color:var(--purple)">SHA-256 hash</strong> + <strong style="color:var(--purple)">salt unik</strong>. Sesionet kanë timeout automatik. Max 3 tentativa hyrje.
+        </p>
+        <div style="max-width:380px;">
+          <div style="margin-bottom:1rem;">
+            <label>Email / Emri i Përdoruesit</label>
+            <input type="email" id="lgEmail" placeholder="email@klinika.al"/>
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label>Fjalëkalimi</label>
+            <input type="password" id="lgPass" placeholder="••••••••"/>
+          </div>
+          <div style="display:flex;gap:0.7rem;">
+            <button class="btn-login" onclick="tryLogin()">🔐 Hyr në Sistem</button>
+            <button style="background:var(--border);color:var(--text);" onclick="registerDemo()">📝 Regjistrohu</button>
+          </div>
+        </div>
+        <div class="output" id="loginOut" style="display:none;margin-top:1rem;">
+          <div class="mono" id="loginResult"></div>
+        </div>
+        <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);">
+          <h4 style="font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem;text-transform:uppercase;">Konfigurimi i Sesionit</h4>
+          <div style="font-size:0.82rem;color:var(--muted);line-height:1.8;">
+            ✅ Session timeout: <span style="color:var(--green)">30 minuta inaktivitet</span><br/>
+            ✅ Cookie flags: <span style="color:var(--green)">HttpOnly + Secure + SameSite=Strict</span><br/>
+            ✅ Tentativa max: <span style="color:var(--green)">3 – pastaj bllokimi 15 min</span><br/>
+            ✅ Vërtetimi: <span style="color:var(--green)">JWT Token + Refresh Token</span><br/>
+            ✅ HTTPS: <span style="color:var(--green)">TLS 1.3 i detyrueshëm</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div id="log" class="section">
+    <div class="card">
+      <div class="card-header"><span>📋</span><h2>REGJISTRI I NGJARJEVE TË SIGURISË</h2></div>
+      <div class="card-body" id="logBody">
+        <p style="font-size:0.8rem;color:var(--muted);">Veprimet e sigurisë do të shfaqen këtu...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── TABS ──────────────────────────────────────────────
+  function showTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ── PASSWORD STRENGTH ─────────────────────────────────
+  function checkStrength(input) {
+    const v = input.value;
+    let score = 0;
+    if (v.length >= 8) score++;
+    if (/[A-Z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+
+    const bar = document.getElementById('strengthBar');
+    const txt = document.getElementById('strengthTxt');
+    const levels = [
+      { w:'25%', c:'#ef4444', t:'🔴 Shumë e dobët' },
+      { w:'50%', c:'#eab308', t:'🟡 Mesatare' },
+      { w:'75%', c:'#3b82f6', t:'🔵 Mirë' },
+      { w:'100%',c:'#22c55e', t:'🟢 Shumë e fortë' },
+    ];
+    const l = levels[Math.max(score-1,0)];
+    bar.style.width = l.w;
+    bar.style.background = l.c;
+    txt.textContent = v.length === 0 ? '' : l.t;
+  }
+
+  // ── CRYPTO HELPERS (Web Crypto API) ──────────────────
+  async function getKey(password) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw', enc.encode(password), { name:'PBKDF2' }, false, ['deriveKey']
+    );
+    return crypto.subtle.deriveKey(
+      { name:'PBKDF2', salt:enc.encode('GentaDentalSalt2025'), iterations:100000, hash:'SHA-256' },
+      keyMaterial, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']
+    );
+  }
+
+  let lastIV, lastEncrypted;
+
+  async function encryptData() {
+    const name  = document.getElementById('encName').value.trim();
+    const email = document.getElementById('encEmail').value.trim();
+    const phone = document.getElementById('encPhone').value.trim();
+    const pass  = document.getElementById('encPass').value;
+
+    if (!name || !email || !pass) {
+      alert('Plotëso fushat: Emri, Email dhe Fjalëkalimi'); return;
+    }
+
+    const payload = JSON.stringify({ name, email, phone, createdAt: new Date().toISOString() });
+    const enc = new TextEncoder();
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    lastIV = iv;
+
+    const key = await getKey(pass);
+    const encrypted = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, key, enc.encode(payload));
+    lastEncrypted = encrypted;
+
+    const hexIV  = Array.from(iv).map(b=>b.toString(16).padStart(2,'0')).join('');
+    const hexData= Array.from(new Uint8Array(encrypted)).map(b=>b.toString(16).padStart(2,'0')).join('');
+
+    document.getElementById('encOutput').style.display='block';
+    document.getElementById('encResult').innerHTML =
+      `<span style="color:var(--muted)">Algoritmi:</span> AES-256-GCM\n` +
+      `<span style="color:var(--muted)">IV (96-bit):</span> <span style="color:var(--yellow)">${hexIV}</span>\n` +
+      `<span style="color:var(--muted)">Çelësi:</span> PBKDF2(SHA-256, 100k iter)\n` +
+      `<span style="color:var(--muted)">Të dhënat e enkriptuara:</span>\n<span style="color:var(--green)">${hexData.substring(0,80)}...</span>`;
+
+    addLog('✅ Enkriptim i suksesshëm – AES-256-GCM – të dhënat e llogarisë', 'ok');
+  }
+
+  async function decryptData() {
+    if (!lastEncrypted) { alert('Enkriptoni fillimisht të dhënat!'); return; }
+    const pass = document.getElementById('encPass').value;
+    try {
+      const key = await getKey(pass);
+      const dec = await crypto.subtle.decrypt({ name:'AES-GCM', iv:lastIV }, key, lastEncrypted);
+      const result = JSON.parse(new TextDecoder().decode(dec));
+      document.getElementById('decOutput').style.display='block';
+      document.getElementById('decResult').innerHTML =
+        `✅ Dekriptim i suksesshëm!\n\nEmri: ${result.name}\nEmail: ${result.email}\nTelefon: ${result.phone}\nKrijuar: ${result.createdAt}`;
+      addLog('✅ Dekriptim i suksesshëm – të dhënat u restauruan', 'ok');
+    } catch(e) {
+      document.getElementById('decOutput').style.display='block';
+      document.getElementById('decResult').innerHTML = '❌ Fjalëkalim i gabuar – dekriptimi dështoi!';
+      document.getElementById('decResult').className = 'mono bad';
+      addLog('❌ Tentativë e dështuar dekriptimi – fjalëkalim i gabuar', 'fail');
+    }
+  }
+
+  // ── HASH (SHA-256) ────────────────────────────────────
+  async function sha256(text) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  let users = {}, attempts = {};
+
+  async function registerDemo() {
+    const email = document.getElementById('lgEmail').value.trim();
+    const pass  = document.getElementById('lgPass').value;
+    if (!email || !pass) { alert('Plotëso email dhe fjalëkalim'); return; }
+    const salt = crypto.getRandomValues(new Uint8Array(8)).join('');
+    const hash = await sha256(pass + salt);
+    users[email] = { hash, salt };
+    document.getElementById('loginOut').style.display='block';
+    document.getElementById('loginResult').innerHTML =
+      `<span class="ok">✅ Llogaria u krijua!\nEmail: ${email}\nHash (SHA-256+salt): ${hash.substring(0,40)}...</span>`;
+    addLog(`📝 Regjistrim i ri – ${email}`, 'info');
+  }
+
+  async function tryLogin() {
+    const email = document.getElementById('lgEmail').value.trim();
+    const pass  = document.getElementById('lgPass').value;
+    if (!email || !pass) { alert('Plotëso email dhe fjalëkalim'); return; }
+
+    if (!users[email]) {
+      document.getElementById('loginOut').style.display='block';
+      document.getElementById('loginResult').innerHTML=`<span class="bad">❌ Llogaria nuk ekziston. Regjistrohu fillimisht.</span>`;
+      addLog(`⚠️ Tentativë hyrje – llogari e panjohur: ${email}`, 'fail');
+      return;
+    }
+
+    attempts[email] = (attempts[email]||0)+1;
+    if (attempts[email] > 3) {
+      document.getElementById('loginOut').style.display='block';
+      document.getElementById('loginResult').innerHTML=`<span class="bad">🔒 Llogaria u bllokua pas 3 tentativave të dështuara. Prisni 15 min.</span>`;
+      addLog(`🔒 BLLOKIME – ${email} – tejkaloi tentativat max`, 'fail');
+      return;
+    }
+
+    const { hash, salt } = users[email];
+    const inputHash = await sha256(pass + salt);
+    document.getElementById('loginOut').style.display='block';
+    if (inputHash === hash) {
+      const token = btoa(email+':'+Date.now()).substring(0,32);
+      document.getElementById('loginResult').innerHTML=
+        `<span class="ok">✅ Hyrja u krye me sukses!\nSession Token: ${token}...\nSesioni skadon: ${new Date(Date.now()+30*60000).toLocaleTimeString('sq')}</span>`;
+      attempts[email]=0;
+      addLog(`✅ Hyrje e suksesshme – ${email} – session aktiv 30 min`, 'ok');
+    } else {
+      document.getElementById('loginResult').innerHTML=
+        `<span class="bad">❌ Fjalëkalim i gabuar! Tentativa ${attempts[email]}/3</span>`;
+      addLog(`❌ Fjalëkalim i gabuar – ${email} – tentativa ${attempts[email]}/3`, 'fail');
+    }
+  }
+
+  // ── SECURITY LOG ──────────────────────────────────────
+  function addLog(msg, type) {
+    const now = new Date().toLocaleTimeString('sq');
+    const cls = type==='ok'?'log-ok':type==='fail'?'log-fail':'log-info';
+    const logBody = document.getElementById('logBody');
+    if (logBody.querySelector('p')) logBody.innerHTML='';
+    logBody.innerHTML = `<div class="log-entry"><span class="log-time">[${now}]</span><span class="${cls}">${msg}</span></div>` + logBody.innerHTML;
+  }
+</script>
+</body>
+</html>
